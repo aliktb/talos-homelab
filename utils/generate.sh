@@ -25,4 +25,5 @@ mkdir -p "$OUTPUT_DIR"
 talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT" \
   --with-secrets secrets.yaml \
   --config-patch-control-plane patches/enable-workloads-on-controlplane.yaml \
+  --config-patch-control-plane patches/install.yaml \
   --output-dir "$OUTPUT_DIR"
