@@ -26,4 +26,5 @@ talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT" \
   --with-secrets secrets.yaml \
   --config-patch-control-plane patches/enable-workloads-on-controlplane.yaml \
   --config-patch-control-plane patches/install.yaml \
+  --config-patch-control-plane patches/network.yaml \
   --output-dir "$OUTPUT_DIR"

@@ -1,0 +1,5 @@
+machine:
+  network:
+    interfaces:
+    - interface: enp87s0
+      dhcp: true
