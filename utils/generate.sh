@@ -5,12 +5,13 @@ set -e
 source config.env
 
 # Always remove decrypted secrets on exit, even if the script fails
-trap 'rm -f secrets.yaml' EXIT
+trap 'rm -f secrets.yaml patches/gitlab-registry.yaml' EXIT
 
 FILES=("controlplane.yaml" "worker.yaml" "talosconfig")
 
 # Decrypt secrets
 sops -d secrets.enc.yaml > secrets.yaml
+sops -d patches/gitlab-registry.enc.yaml > patches/gitlab-registry.yaml
 
 # Backup existing generated files
 for f in "${FILES[@]}"; do
@@ -27,4 +28,5 @@ talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT" \
   --config-patch-control-plane patches/enable-workloads-on-controlplane.yaml \
   --config-patch-control-plane patches/install.yaml \
   --config-patch-control-plane patches/network.yaml \
+  --config-patch patches/gitlab-registry.yaml \
   --output-dir "$OUTPUT_DIR"
