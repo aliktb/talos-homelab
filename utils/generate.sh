@@ -30,5 +30,6 @@ talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT" \
   --config-patch-control-plane patches/network.yaml \
   --config-patch-control-plane patches/kubelet-extra-args.yaml \
   --config-patch-control-plane patches/enable-load-balancer.yaml \
+  --config-patch-control-plane patches/metrics-server.yaml \
   --config-patch patches/gitlab-registry.yaml \
   --output-dir "$OUTPUT_DIR"
