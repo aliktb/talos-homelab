@@ -124,7 +124,20 @@ export TALOSCONFIG="$PWD/generated/talosconfig"
 export KUBECONFIG="$PWD/kubeconfig"
 ```
 
-If you use `direnv`, you can place those values in `.envrc`.
+If you use `direnv`, create a local `.envrc` file:
+
+```bash
+export TALOSCONFIG="$PWD/generated/talosconfig"
+export KUBECONFIG="$PWD/kubeconfig"
+```
+
+Then allow it once:
+
+```bash
+direnv allow
+```
+
+`.envrc` is ignored by git, so this stays local to your machine.
 
 ## Script Reference
 
