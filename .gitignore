@@ -1,0 +1,4 @@
+.envrc
+generated
+kubeconfig
+secrets.yaml
