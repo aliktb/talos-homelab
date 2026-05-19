@@ -1,3 +1,10 @@
+cluster:
+  network:
+    cni:
+      name: flannel
+      flannel:
+        kubeNetworkPoliciesEnabled: true
+
 machine:
   network:
     interfaces:
