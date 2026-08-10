@@ -1,0 +1,9 @@
+cluster:
+  apiServer:
+    extraArgs:
+      oidc-issuer-url: "https://keycloak.external.homelab.aliktb.com/realms/homelab"
+      oidc-client-id: "kubernetes-homelab-dev"
+      oidc-username-claim: "preferred_username"
+      oidc-username-prefix: "oidc:"
+      oidc-groups-claim: "groups"
+      oidc-groups-prefix: "oidc:"
