@@ -11,9 +11,12 @@ source config.env
 
 # Upgrade Talos OS
 echo "Upgrading Talos to $TALOS_VERSION..."
+# This is a single-node cluster. Draining cannot preserve workload availability
+# and can time out while evicting many StatefulSet pods.
 talosctl upgrade \
   --nodes "$NODE" \
-  --image ghcr.io/siderolabs/installer:"$TALOS_VERSION" \
+  --image factory.talos.dev/metal-installer/dc8730aa8cc7bfa5ef7e2b3284248f2631135b2faf4ae11aa997a0c1987b0eee:"$TALOS_VERSION" \
+  --drain=false \
   --wait
 
 echo "Talos upgrade complete!"

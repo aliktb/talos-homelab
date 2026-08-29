@@ -1,7 +1,7 @@
 # Configure kubectl OIDC Login
 
 This guide configures `kubectl` to authenticate to the homelab cluster using
-Keycloak. It assumes that your Keycloak user belongs to `kubernetes-admins`.
+Keycloak. It assumes that your Keycloak user belongs to `/kubernetes/admins`.
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ kubectl auth can-i '*' '*' --all-namespaces
 ```
 
 The identity should include the `oidc:` prefix and group membership should
-include `oidc:kubernetes-admins`. The authorization check should return `yes`.
+include `oidc:/kubernetes/admins`. The authorization check should return `yes`.
 
 ## Refresh group membership
 
@@ -58,4 +58,4 @@ kubectl auth whoami
 
 The second command triggers a new browser login and requests a fresh token. If
 the group is still absent, confirm that the user belongs to
-`kubernetes-admins` in Keycloak and that the group mapper has been applied.
+`/kubernetes/admins` in Keycloak and that the group mapper has been applied.

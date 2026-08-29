@@ -28,6 +28,7 @@ talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT" \
   --with-secrets secrets.yaml \
   --config-patch-control-plane patches/enable-workloads-on-controlplane.yaml \
   --config-patch-control-plane patches/install.yaml \
+  --config-patch-control-plane patches/intel-igpu.yaml \
   --config-patch-control-plane patches/network.yaml \
   --config-patch-control-plane patches/kubelet-extra-args.yaml \
   --config-patch-control-plane patches/gcp-workload-identity.yaml \

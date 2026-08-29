@@ -36,6 +36,7 @@ bash utils/update-talosctl.sh v1.12.5
 - `config.env`: cluster-specific values used by the scripts
 - `secrets.enc.yaml`: encrypted Talos secrets
 - `patches/`: Talos config patches, including encrypted registry credentials
+- `docs/`: operator documentation, including the Intel iGPU image workflow
 - `generated/`: generated machine configs and `talosconfig`
 - `utils/`: helper scripts for generate/apply/upgrade flows
 
@@ -114,6 +115,8 @@ bash utils/upgrade.sh --upgrade-k8s
 ```
 
 The versions come from `TALOS_VERSION` and `K8S_VERSION` in `config.env`.
+Talos upgrades use the custom Intel iGPU installer image; see
+[Intel iGPU support](docs/intel-igpu.md).
 
 ## Optional Shell Environment
 
