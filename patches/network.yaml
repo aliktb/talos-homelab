@@ -1,12 +1,7 @@
-cluster:
-  network:
-    cni:
-      name: flannel
-      flannel:
-        kubeNetworkPoliciesEnabled: true
-
-machine:
-  network:
-    interfaces:
-    - interface: enp87s0
-      dhcp: true
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: enp87s0
+---
+apiVersion: v1alpha1
+kind: KubeFlannelCNIConfig
+kubeNetworkPoliciesEnabled: true

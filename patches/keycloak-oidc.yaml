@@ -1,9 +1,21 @@
-cluster:
-  apiServer:
-    extraArgs:
-      oidc-issuer-url: "https://keycloak.external.homelab.aliktb.com/realms/homelab"
-      oidc-client-id: "kubernetes-homelab-dev"
-      oidc-username-claim: "preferred_username"
-      oidc-username-prefix: "oidc:"
-      oidc-groups-claim: "groups"
-      oidc-groups-prefix: "oidc:"
+apiVersion: v1alpha1
+kind: KubeAuthenticationConfig
+configuration:
+  anonymous:
+    conditions:
+    - path: /livez
+    - path: /readyz
+    - path: /healthz
+    enabled: true
+  jwt:
+  - issuer:
+      url: "https://keycloak.external.homelab.aliktb.com/realms/homelab"
+      audiences:
+      - kubernetes-homelab-dev
+    claimMappings:
+      username:
+        claim: preferred_username
+        prefix: "oidc:"
+      groups:
+        claim: groups
+        prefix: "oidc:"
