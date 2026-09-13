@@ -28,13 +28,13 @@ talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT" \
   --with-secrets secrets.yaml \
   --config-patch-control-plane patches/enable-workloads-on-controlplane.yaml \
   --config-patch-control-plane patches/install.yaml \
-  --config-patch-control-plane patches/intel-igpu.yaml \
   --config-patch-control-plane patches/network.yaml \
   --config-patch-control-plane patches/kubelet-extra-args.yaml \
   --config-patch-control-plane patches/gcp-workload-identity.yaml \
   --config-patch-control-plane patches/keycloak-oidc.yaml \
   --config-patch-control-plane patches/enable-load-balancer.yaml \
   --config-patch-control-plane patches/metrics-server.yaml \
+  --config-patch-control-plane patches/etcd-metrics.yaml \
   --config-patch patches/gitlab-registry.yaml \
   --config-patch patches/scaleway-registry.yaml \
   --output-dir "$OUTPUT_DIR"

@@ -1,7 +1,7 @@
-cluster:
-  apiServer:
-    extraArgs:
-      service-account-issuer: "https://storage.googleapis.com/aliktb-homelab-oidc"
-      service-account-jwks-uri: "https://storage.googleapis.com/aliktb-homelab-oidc/keys.json"
-      api-audiences: "iam.googleapis.com/projects/874982245234/locations/global/workloadIdentityPools/homelab-dev/providers/homelab-dev,https://storage.googleapis.com/aliktb-homelab-oidc,sts.googleapis.com,https://kubernetes.default.svc.cluster.local"
-      service-account-max-token-expiration: 24h
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+extraArgs:
+  service-account-issuer: "https://storage.googleapis.com/aliktb-homelab-oidc"
+  service-account-jwks-uri: "https://storage.googleapis.com/aliktb-homelab-oidc/keys.json"
+  api-audiences: "iam.googleapis.com/projects/874982245234/locations/global/workloadIdentityPools/homelab-dev/providers/homelab-dev,https://storage.googleapis.com/aliktb-homelab-oidc,sts.googleapis.com,https://kubernetes.default.svc.cluster.local"
+  service-account-max-token-expiration: 24h
