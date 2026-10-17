@@ -118,6 +118,19 @@ The versions come from `TALOS_VERSION` and `K8S_VERSION` in `config.env`.
 Talos upgrades use the custom Intel iGPU installer image; see
 [Intel iGPU support](docs/intel-igpu.md).
 
+## Maintenance
+
+Manually defragment etcd and display its status before and after:
+
+```bash
+bash utils/etcd-defrag.sh
+```
+
+This targets `NODE` from `config.env` using your active `talosctl` configuration.
+Run during a quiet period: defragmentation can briefly interrupt Kubernetes API
+requests on this single control-plane cluster. Run when database fragmentation
+or quota usage warrants it; this script does not schedule automatic maintenance.
+
 ## Optional Shell Environment
 
 If you want local commands to use this repo's generated configs by default, export:
@@ -149,4 +162,5 @@ direnv allow
 - `bash utils/apply.sh`: apply the control plane config and storage patch
 - `bash utils/get-kubeconfig.sh`: fetch cluster kubeconfig into the repo
 - `bash utils/upgrade.sh`: upgrade Talos, optionally Kubernetes too
+- `bash utils/etcd-defrag.sh`: defragment etcd and show status before and after
 - `bash utils/update-talosctl.sh`: install or update `talosctl`
