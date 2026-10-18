@@ -32,6 +32,8 @@ talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT" \
   --config-patch-control-plane patches/kubelet-extra-args.yaml \
   --config-patch-control-plane patches/gcp-workload-identity.yaml \
   --config-patch-control-plane patches/keycloak-oidc.yaml \
+  --config-patch-control-plane patches/audit-policy.yaml \
+  --config-patch-control-plane patches/audit-output.yaml \
   --config-patch-control-plane patches/enable-load-balancer.yaml \
   --config-patch-control-plane patches/metrics-server.yaml \
   --config-patch-control-plane patches/etcd-metrics.yaml \

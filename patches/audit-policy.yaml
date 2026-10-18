@@ -1,0 +1,176 @@
+apiVersion: v1alpha1
+kind: KubeAuditPolicyConfig
+configuration:
+  apiVersion: audit.k8s.io/v1
+  kind: Policy
+  omitManagedFields: true
+  omitStages:
+    - RequestReceived
+  rules:
+    # Health checks and API discovery are high-volume and have little forensic
+    # value. Keep this rule before the human-user rules below.
+    - level: None
+      nonResourceURLs:
+        - /api
+        - /api/*
+        - /apis
+        - /apis/*
+        - /healthz*
+        - /livez*
+        - /metrics
+        - /openapi/*
+        - /readyz*
+        - /version
+
+    # Record access to individual Secrets without ever recording their bodies.
+    # List and watch traffic is omitted because controllers generate it
+    # continuously and it does not reveal Secret values.
+    - level: None
+      verbs:
+        - list
+        - watch
+      resources:
+        - group: ""
+          resources:
+            - secrets
+    - level: Metadata
+      resources:
+        - group: ""
+          resources:
+            - secrets
+
+    # Interactive access to workloads and node/service proxies is always
+    # security-relevant.
+    - level: Metadata
+      resources:
+        - group: ""
+          resources:
+            - nodes/proxy
+            - pods/attach
+            - pods/exec
+            - pods/portforward
+            - pods/proxy
+            - services/proxy
+
+    # These request bodies describe permissions or cluster-wide interception
+    # behaviour and are useful during an investigation. No Secret objects are
+    # included at Request level.
+    - level: Request
+      omitManagedFields: true
+      verbs:
+        - create
+        - update
+        - patch
+        - delete
+        - deletecollection
+      resources:
+        - group: admissionregistration.k8s.io
+          resources:
+            - mutatingwebhookconfigurations
+            - validatingadmissionpolicies
+            - validatingadmissionpolicybindings
+            - validatingwebhookconfigurations
+        - group: apiextensions.k8s.io
+          resources:
+            - customresourcedefinitions
+        - group: apiregistration.k8s.io
+          resources:
+            - apiservices
+        - group: certificates.k8s.io
+          resources:
+            - certificatesigningrequests
+            - certificatesigningrequests/approval
+        - group: networking.k8s.io
+          resources:
+            - networkpolicies
+        - group: rbac.authorization.k8s.io
+          resources:
+            - clusterrolebindings
+            - clusterroles
+            - rolebindings
+            - roles
+
+    # Capture authorization-sensitive virtual verbs if they reach the audit
+    # policy as request verbs.
+    - level: Metadata
+      verbs:
+        - bind
+        - escalate
+        - impersonate
+
+    # Keep identity, workload, ingress and selected GitOps mutations at
+    # Metadata level. Status subresources are intentionally not included.
+    - level: Metadata
+      verbs:
+        - create
+        - update
+        - patch
+      resources:
+        - group: ""
+          resources:
+            - namespaces
+            - nodes
+            - pods/ephemeralcontainers
+            - serviceaccounts
+            - serviceaccounts/token
+            - services
+        - group: apps
+          resources:
+            - daemonsets
+            - deployments
+            - statefulsets
+        - group: batch
+          resources:
+            - cronjobs
+            - jobs
+        - group: external-secrets.io
+          resources:
+            - clusterexternalsecrets
+            - clustersecretstores
+            - externalsecrets
+            - secretstores
+        - group: gateway.networking.k8s.io
+          resources:
+            - grpcroutes
+            - httproutes
+            - tcproutes
+            - tlsroutes
+            - udproutes
+        - group: helm.toolkit.fluxcd.io
+          resources:
+            - helmreleases
+        - group: kustomize.toolkit.fluxcd.io
+          resources:
+            - kustomizations
+        - group: source.toolkit.fluxcd.io
+          resources:
+            - buckets
+            - gitrepositories
+            - helmcharts
+            - helmrepositories
+            - ocirepositories
+
+    # Deletes are uncommon and useful for incident reconstruction regardless
+    # of the resource type.
+    - level: Metadata
+      verbs:
+        - delete
+        - deletecollection
+
+    # Retain all API activity from the configured Keycloak Kubernetes groups,
+    # including denied requests. Group names include the OIDC and Keycloak
+    # full-path prefixes configured for this cluster.
+    - level: Metadata
+      userGroups:
+        - oidc:/kubernetes/admins
+        - oidc:/kubernetes/homelab-users-developer
+        - oidc:/kubernetes/homelab-users-read-only
+
+    # Preserve anonymous requests that get past the health endpoint exclusions.
+    - level: Metadata
+      users:
+        - system:anonymous
+
+    # Drop routine controller reads, watches, status updates, leases, events
+    # and access reviews that did not match a security-focused rule above.
+    - level: None
