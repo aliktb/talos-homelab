@@ -71,6 +71,7 @@ This will:
 
 - decrypt `secrets.enc.yaml` and the encrypted registry patches
 - back up existing generated files to `*.bak`
+- enable bounded user namespaces for rootless container image builds
 - generate fresh `controlplane.yaml`, `worker.yaml`, and `talosconfig` into `generated/`
 
 ### 2. Point `talosctl` at the control plane
