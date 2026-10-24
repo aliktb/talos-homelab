@@ -40,4 +40,6 @@ talosctl gen config "$CLUSTER_NAME" "$CLUSTER_ENDPOINT" \
   --config-patch patches/user-namespaces.yaml \
   --config-patch patches/gitlab-registry.yaml \
   --config-patch patches/scaleway-registry.yaml \
+  --kubernetes-version "$K8S_VERSION" \
+  --talos-version "$TALOS_VERSION" \
   --output-dir "$OUTPUT_DIR"
