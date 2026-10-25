@@ -59,6 +59,20 @@ Notes:
 - `OUTPUT_DIR` is where generated files are written.
 - `generate.sh` decrypts secrets temporarily and removes the decrypted files on exit.
 
+### GitLab Container Registry
+
+`patches/gitlab-registry.enc.yaml` contains a SOPS-encrypted deploy token for
+the parent `aliktb-homelab` GitLab group. The token must have only the
+`read_registry` scope.
+
+Talos supplies this credential to the container runtime node-wide. Workloads in
+any namespace can therefore pull private images from projects beneath the
+parent group without copying registry credentials into Kubernetes Secrets.
+
+To rotate the credential, create a replacement group deploy token, update the
+encrypted `username` and `password` fields with `sops set --value-stdin`, apply
+the registry patch, verify a private image pull, and then revoke the old token.
+
 ## Typical Usage
 
 ### 1. Generate Talos configs
