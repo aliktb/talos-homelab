@@ -1,0 +1,6 @@
+[tools]
+flux-operator = "0.62.1"
+flux2 = "2.9"
+kubectl = "1.37.1"
+node = "26"
+talosctl = "1.14.4"
