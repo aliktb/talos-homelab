@@ -104,8 +104,11 @@ bash utils/apply.sh
 
 This:
 
-- applies `generated/controlplane.yaml`
-- applies the storage patch from `patches/storage.yaml`
+- applies `generated/controlplane.yaml` and `patches/storage.yaml` atomically
+
+Always use `utils/apply.sh` when applying the generated control-plane config.
+Applying `generated/controlplane.yaml` directly omits the standalone storage
+document and causes Talos to unmount `/var/mnt/local-storage`.
 
 ### 4. Fetch kubeconfig
 
