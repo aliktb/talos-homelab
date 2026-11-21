@@ -3,12 +3,8 @@ set -e
 
 source config.env
 
-# Apply the main controlplane config
+# Apply the main control plane config and standalone storage document together.
 talosctl apply-config \
   --nodes "$NODE" \
-  --file "$OUTPUT_DIR/controlplane.yaml"
-
-# Apply UserVolumeConfig as a separate document
-talosctl patch mc \
-  --nodes "$NODE" \
-  --patch @patches/storage.yaml
+  --file "$OUTPUT_DIR/controlplane.yaml" \
+  --config-patch @patches/storage.yaml

@@ -1,0 +1,7 @@
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+extraArgs:
+  # Talos 1.14 isolates Kubernetes workloads in a separate mount namespace,
+  # so ordinary pods cannot read the host audit directory. Writing audit
+  # events to stdout lets Alloy collect them through the Kubernetes logs API.
+  audit-log-path: "-"

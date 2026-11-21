@@ -59,6 +59,20 @@ Notes:
 - `OUTPUT_DIR` is where generated files are written.
 - `generate.sh` decrypts secrets temporarily and removes the decrypted files on exit.
 
+### GitLab Container Registry
+
+`patches/gitlab-registry.enc.yaml` contains a SOPS-encrypted deploy token for
+the parent `aliktb-homelab` GitLab group. The token must have only the
+`read_registry` scope.
+
+Talos supplies this credential to the container runtime node-wide. Workloads in
+any namespace can therefore pull private images from projects beneath the
+parent group without copying registry credentials into Kubernetes Secrets.
+
+To rotate the credential, create a replacement group deploy token, update the
+encrypted `username` and `password` fields with `sops set --value-stdin`, apply
+the registry patch, verify a private image pull, and then revoke the old token.
+
 ## Typical Usage
 
 ### 1. Generate Talos configs
@@ -71,6 +85,7 @@ This will:
 
 - decrypt `secrets.enc.yaml` and the encrypted registry patches
 - back up existing generated files to `*.bak`
+- enable bounded user namespaces for rootless container image builds
 - generate fresh `controlplane.yaml`, `worker.yaml`, and `talosconfig` into `generated/`
 
 ### 2. Point `talosctl` at the control plane
@@ -89,8 +104,11 @@ bash utils/apply.sh
 
 This:
 
-- applies `generated/controlplane.yaml`
-- applies the storage patch from `patches/storage.yaml`
+- applies `generated/controlplane.yaml` and `patches/storage.yaml` atomically
+
+Always use `utils/apply.sh` when applying the generated control-plane config.
+Applying `generated/controlplane.yaml` directly omits the standalone storage
+document and causes Talos to unmount `/var/mnt/local-storage`.
 
 ### 4. Fetch kubeconfig
 
@@ -117,6 +135,19 @@ bash utils/upgrade.sh --upgrade-k8s
 The versions come from `TALOS_VERSION` and `K8S_VERSION` in `config.env`.
 Talos upgrades use the custom Intel iGPU installer image; see
 [Intel iGPU support](docs/intel-igpu.md).
+
+## Maintenance
+
+Manually defragment etcd and display its status before and after:
+
+```bash
+bash utils/etcd-defrag.sh
+```
+
+This targets `NODE` from `config.env` using your active `talosctl` configuration.
+Run during a quiet period: defragmentation can briefly interrupt Kubernetes API
+requests on this single control-plane cluster. Run when database fragmentation
+or quota usage warrants it; this script does not schedule automatic maintenance.
 
 ## Optional Shell Environment
 
@@ -149,4 +180,5 @@ direnv allow
 - `bash utils/apply.sh`: apply the control plane config and storage patch
 - `bash utils/get-kubeconfig.sh`: fetch cluster kubeconfig into the repo
 - `bash utils/upgrade.sh`: upgrade Talos, optionally Kubernetes too
+- `bash utils/etcd-defrag.sh`: defragment etcd and show status before and after
 - `bash utils/update-talosctl.sh`: install or update `talosctl`
